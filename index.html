@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>search</title>
+    <style type="text/css" media="screen">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    li {
+        list-style: none;
+        padding: 3px;
+    }
+    #searchMsg{
+    	    width: 540px;
+    height: 34px;
+        vertical-align: top;
+        font-size: 14px;
+        padding-left: 3px;
+    }
+    li:hover {
+        background-color: rgb(168, 213, 252);
+        cursor: default;
+    }
+    ul li:first-child{
+	  margin-top: 0;
+    }
+    ul{
+    	border: 1px solid #b6b6b6;
+    	border-top: 0px;
+        display: none;
+    }
+    #btn{
+    	color: #fff;
+    line-height: 38px;
+    padding: 0 8px;
+    font-size:14px;
+    display: inline-block;
+    height: 38px;
+    background: #3385ff;
+        cursor: pointer;
+    }
+    .searchbar{
+    	    font-size: 0;
+    }
+    .search{
+    	position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -308px;
+    margin-top: -124px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="search">
+        <div class="searchbar">
+            <input type="text" id="searchMsg" placeholder="请粘贴重置密码邮件中3个链接中的任意1个，链接以http为开头">
+            <span id="btn">前往重置密码</span>
+        </div>
+    </div>
+    <script>
+    var searchMsg = document.getElementById("searchMsg");
+    var btn = document.getElementById("btn");
+
+    var desk_campus = {"src":"http://10.21.16.117:5000","pri":1,"success_flag":0};
+    var desk_zerotier = {"src":"http://172.22.22.22:5000","pri":2,"success_flag":0};
+    var desk_ds1 = {"src":"https://nas1.hdugeek.me:18080","pri":3,"success_flag":0};
+    var desk_ds2 = {"src":"https://nas2.hdugeek.me:18080","pri":3,"success_flag":0};
+    var desk_ds3 = {"src":"http://nas3.hdugeek.me:18080","pri":3,"success_flag":0};
+    var desk_ds4 = {"src":"http://net.dreamer2q.me:15000","pri":3,"success_flag":0};
+    var desk_ds5 = {"src":"http://net2.dreamer2q.me:15000","pri":3,"success_flag":0};
+    var desk_ds6 = {"src":"http://net3.dreamer2q.me:15000","pri":3,"success_flag":0};
+    var desk_list=[];
+
+    function image_loader(dict){
+        var image = new Image();
+        image.onerror=function(){};
+        image.onload=function(){
+            dict["success_flag"]=1;
+        };
+        image.src = dict["src"]+"/webman/resources/images/default/1x/preview_bar_bg.png" + '?t=' +(+new Date());
+    }
+
+    function Load_img(){
+        image_loader(desk_campus);
+        image_loader(desk_zerotier);
+        image_loader(desk_ds1);
+        image_loader(desk_ds2);
+        image_loader(desk_ds3);
+        image_loader(desk_ds4);
+        image_loader(desk_ds5);
+        image_loader(desk_ds6);
+    }
+
+
+    //点击按钮跳转到相应的页面
+    btn.onclick = function() {
+        var srcvalue = searchMsg.value;
+        srcvalue = srcvalue.replace("http://192.168.1.4:5000","");
+        srcvalue = srcvalue.replace("http://172.22.22.22:5000","");
+        srcvalue = srcvalue.replace("http://10.21.16.117:5000","");
+        if(desk_campus["success_flag"]) {
+            location.href = desk_campus["src"] + srcvalue;
+        } else if (desk_zerotier["success_flag"]) {
+            location.href = desk_zerotier["src"] + srcvalue;
+        } else if(desk_ds1["success_flag"] || desk_ds2["success_flag"] || desk_ds3["success_flag"] || desk_ds4["success_flag"] || desk_ds5["success_flag"] || desk_ds6["success_flag"]){
+            desk_list=[];
+            if (desk_ds1["success_flag"]){
+                desk_list.push(desk_ds1["src"]);
+            }if (desk_ds2["success_flag"]){
+                desk_list.push(desk_ds2["src"]);
+            }if (desk_ds3["success_flag"]){
+                desk_list.push(desk_ds3["src"]);
+            }if (desk_ds4["success_flag"]){
+                desk_list.push(desk_ds4["src"]);
+            }if (desk_ds5["success_flag"]){
+                desk_list.push(desk_ds5["src"]);
+            }if (desk_ds6["success_flag"]){
+                desk_list.push(desk_ds6["src"]);
+            }
+            location.href =desk_list[Math.floor((Math.random()*desk_list.length))] + srcvalue;
+        }
+    }
+
+
+    window.onload = function(){
+        Load_img();
+    };
+
+    </script>
+</body>
+
+</html>
